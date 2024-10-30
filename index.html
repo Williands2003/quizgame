@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Personagens Históricos</title>
+   
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+        #statusAnswer {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        #reload {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz de Personagens Históricos</h1>
+        <h2 id="question" class="mt-4"></h2>
+        <h4>--------- Opções ---------</h4>
+        <div id="optionsContainer" class="mt-3"></div>
+        <h3 id="statusAnswer" class="mt-4 text-center"></h3>
+        <button type="button" id="reload" class="btn btn-success btn-block mt-4">Próxima Pergunta</button>
+    </div>
+
+  
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        const questions = [
+            'Quem foi que gritou "Independência ou Morte"?',
+            "Qual é a capital da França?",
+            "Qual é o maior planeta do nosso sistema solar?",
+            "Qual é a atual capital do Brasil?"
+        ];
+        
+        const options = [
+            ["Dom Pedro II", "Tiririca", "Dom Pedro I", "Zacarias"],
+            ["Londres", "Paris", "Berlim", "Madrid"],
+            ["Vênus", "Marte", "Júpiter", "Saturno"],
+            ["Salvador", "Rio de Janeiro", "São Paulo", "Brasília"]
+        ];
+        
+        const correctAnswers = [2, 1, 2, 3];
+        
+        let nowQuestion = Math.floor(Math.random() * questions.length);
+        
+        generateQuestions();
+        selectButton();
+
+        function generateQuestions(){
+            document.getElementById("question").innerHTML = questions[nowQuestion];
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = ""; // Limpa as opções anteriores
+            options[nowQuestion].forEach((option, index) => {
+                const button = document.createElement('button');
+                button.type = "button";
+                button.className = "btn btn-primary btn-block mb-2 alternative";
+                button.value = index;
+                button.textContent = option;
+                optionsContainer.appendChild(button);
+            });
+        }
+        
+        function selectButton(){
+            const alternatives = document.querySelectorAll('.alternative');
+            alternatives.forEach(button => {
+                button.addEventListener('click', () => {
+                    const answer = button.value; 
+                    checkAnswer(answer);
+                });
+            });
+        }
+
+        function checkAnswer(answer){
+            answer = parseInt(answer);
+            let statusAnswer = document.getElementById("statusAnswer");
+            if (answer === correctAnswers[nowQuestion]) {
+                statusAnswer.innerHTML = "Acertou!!!";
+                statusAnswer.className = "mt-4 text-center text-success";
+            } else {
+                statusAnswer.innerHTML = `Errou! A resposta correta é: ${options[nowQuestion][correctAnswers[nowQuestion]]}`;
+                statusAnswer.className = "mt-4 text-center text-danger";
+            }
+            document.getElementById('reload').style.display = "block";
+        }
+
+        document.getElementById('reload').addEventListener('click', () => {
+            nowQuestion = Math.floor(Math.random() * questions.length);
+            generateQuestions();
+            document.getElementById('statusAnswer').innerHTML = "";
+            this.style.display = "none";
+        });
+    </script>
+</body>
+</html>
